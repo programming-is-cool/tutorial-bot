@@ -23,6 +23,9 @@ client.on('message', (msg) => {
             msg.channel.send(`${ warnMentions[0] }, ${ msg.author.tag } warned you.`)
             break;
         case '!kick':
+            if (!msg.member.hasPermission(['KICK_MEMBERS'])) {
+                return msg.reply('You do not have permission to kick a member.')
+            }
             if (!args.length) {
                 return msg.reply('An argument is required.')
             }
@@ -39,7 +42,13 @@ client.on('message', (msg) => {
                 msg.channel.send(`${ kickMentions[0] } has been kicked.  Let this be a lesson to you all.`)
             })
             .catch(console.error)
+            break;
+        default:
+            msg.reply('I do not understand that command.')
     }
 });
 
-client.login(token);
+client.login(token)
+.catch((error) => {
+    console.log(`${ error }:  Unable to login.  Check your token and try again.`)
+});
